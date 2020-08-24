@@ -48,12 +48,12 @@
         <div class="col-lg-6 mb-4">
           <div class="card shadow">
             <div class="card-header text-center">
-              <strong>{{ server["hardware"]["hostname"] }}</strong>
+              <strong>{{ server["hardware"]["_hostname"] }}</strong>
             </div>
             <div class="card-body">
               <div class="row">
                 <div class="col-12 text-center">
-                  <i class="fa fa-camera display-1 mb-1"></i>
+                  <i class="fa fa-{{ server['platform']['platform'] }} display-1 mb-1"></i>
                 </div>
               </div>
               <div class="row mt-2">
@@ -66,7 +66,7 @@
                 Hostname:
                 </div>
                 <div class="col-8 pl-1">
-                  {{ server["hardware"]["hostname"] }}
+                  {{ server["hardware"]["_hostname"] }}
                 </div>
               </div>
               <div class="row">
@@ -82,30 +82,18 @@
                   <strong class="text-primary">Hardware</strong>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-4 text-right pr-0 font-weight-bold">
-                Platform:
-                </div>
-                <div class="col-8 pl-1">
-                  {{ server["platform"]["platform"] | capitalize }}
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-4 text-right pr-0 font-weight-bold">
-                Temperature:
-                </div>
-                <div class="col-8 pl-1 {% if server['hardware']['gpu_temp'] < server['hardware']['warn_temp'] %}text-success{% elif server['hardware']['gpu_temp'] < server['hardware']['max_temp'] %}text-warning{% else %}text-danger{% endif %}">
-                  {{ server["hardware"]["gpu_temp"]}}
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-4 text-right pr-0 font-weight-bold">
-                Serial:
-                </div>
-                <div class="col-8 pl-1">
-                  {{ server["hardware"]["serial"]}}
-                </div>
-              </div>
+              {% for hardware, state in server['hardware'].items() %}
+                {% if hardware[0:1] != "_" %}
+                  <div class="row">
+                    <div class="col-4 text-right pr-0 font-weight-bold">
+                    {{ hardware }}
+                    </div>
+                    <div class="col-8 pl-1{% if hardware == 'temperature' %}{% if state < server['hardware']['_warn_temp'] %} text-success{% elif state < server['hardware']['_max_temp'] %} text-warning{% else %} text-danger{% endif %}{% endif %}">
+                      {{ state }}
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
               <div class="row mt-2">
                 <div class="col-12 text-center">
                   <strong class="text-primary">Software</strong>
