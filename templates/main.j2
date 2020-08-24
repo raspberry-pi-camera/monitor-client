@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Pi Monitor</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <span class="navbar-brand">Pi Monitor</span>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+    {% if servers | length %}
+    <div class="row mt-5">
+      <div class="col-lg-1">
+      </div>
+      <div class="col-lg-10 d-flex flex-wrap">
+        {% for name,server in servers.items() %}
+        <div class="col-lg-6 mb-4">
+          <div class="card shadow">
+            <div class="card-header text-center">
+              <strong>{{ server["hardware"]["hostname"] }}</strong>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 text-center">
+                  <i class="fa fa-camera display-1 mb-1"></i>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12 text-center">
+                  <strong class="text-primary">Network</strong>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4 text-right pr-0 font-weight-bold">
+                Hostname:
+                </div>
+                <div class="col-8 pl-1">
+                  {{ server["hardware"]["hostname"] }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4 text-right pr-0 font-weight-bold">
+                IP:
+                </div>
+                <div class="col-8 pl-1">
+                  {{ server['info']['address'] }}
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12 text-center">
+                  <strong class="text-primary">Hardware</strong>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4 text-right pr-0 font-weight-bold">
+                Platform:
+                </div>
+                <div class="col-8 pl-1">
+                  {{ server["platform"]["platform"] | capitalize }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4 text-right pr-0 font-weight-bold">
+                Temperature:
+                </div>
+                <div class="col-8 pl-1 {% if server['hardware']['gpu_temp'] < server['hardware']['warn_temp'] %}text-success{% elif server['hardware']['gpu_temp'] < server['hardware']['max_temp'] %}text-warning{% else %}text-danger{% endif %}">
+                  {{ server["hardware"]["gpu_temp"]}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4 text-right pr-0 font-weight-bold">
+                Serial:
+                </div>
+                <div class="col-8 pl-1">
+                  {{ server["hardware"]["serial"]}}
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12 text-center">
+                  <strong class="text-primary">Software</strong>
+                </div>
+              </div>
+              {% for software, version in server['software'].items() %}
+              <div class="row">
+                <div class="col-4 text-right pr-0 font-weight-bold">
+                {{ software }}
+                </div>
+                <div class="col-8 pl-1">
+                  {{ version }}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="col-lg-1"></div>
+    </div>
+    {% else %}
+    <div class="row mt-5">
+      <div class="col-lg-12 text-center">
+        <strong>No servers found</strong>
+      </div>
+      
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/static/js/jquery.slim.min.js"></script>
+  <script src="/static/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
