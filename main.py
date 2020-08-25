@@ -23,9 +23,10 @@ class MyListener:
         
     def remove_service(self, zeroconf, type, name):
         del servers[name]
+        print("Service %s removed" % (name))
 
     def update_service(self, zeroconf, type, name):
-    pass
+        pass
 
 def getJson(url):
     operUrl = urllib.request.urlopen(url)
